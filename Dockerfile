@@ -3,6 +3,7 @@ FROM php:8.2-fpm-alpine AS base
 RUN apk add --no-cache \
     nodejs \
     npm \
+    postgresql-client \
     && npm install -g npm@latest
 
 RUN apk add --no-cache \
