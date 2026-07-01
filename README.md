@@ -1,17 +1,24 @@
 # Laravel Base Docker Image
 
-A minimal base image for Laravel applications built on `php:8.2-fpm-alpine`, with common PHP extensions and Node.js tooling preinstalled. Published as a multi-arch image (linux/amd64, linux/arm64).
+A minimal base image for Laravel applications supporting multiple PHP versions (`8.2`, `8.3`, `8.4`, `8.5`) on Alpine Linux, with common PHP extensions and Node.js tooling preinstalled. Published as a multi-architecture image (`linux/amd64`, `linux/arm64`).
 
-## Image
+## Image & Tags
 
 -   Docker Hub: `satputekuldip/laravel-base`
--   Example tags: `latest`, `1.0.0`, `1.0`, `1`
+-   GitHub Container Registry (GHCR): `ghcr.io/magicstack-llp/laravel-base`
 
-> Note: Tags are built from Git tags (`vX.Y.Z`) via GitHub Actions.
+### Tagging Scheme
+
+For each PHP version `X.Y` (where `X.Y` is `8.2`, `8.3`, `8.4`, or `8.5`):
+-   **Default tags:** `X.Y`, `X.Y-fpm-alpine`, `phpX.Y` (e.g. `8.3`, `8.3-fpm-alpine`, `php8.3`)
+-   **Release-specific tags:** Built when a Git tag `vA.B.C` is pushed:
+    -   `A.B.C-phpX.Y`, `A.B-phpX.Y`, `A-phpX.Y`
+-   **Default PHP version (8.2) bare tags:**
+    -   `A.B.C`, `A.B`, `A`, `latest`
 
 ## What's included
 
-Base image: `php:8.2-fpm-alpine`
+Base images: `php:8.2-fpm-alpine` to `php:8.5-fpm-alpine` configured dynamically.
 
 System packages:
 

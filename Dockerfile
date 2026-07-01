@@ -1,4 +1,5 @@
-FROM php:8.2-fpm-alpine AS base
+ARG PHP_VERSION=8.2
+FROM php:${PHP_VERSION}-fpm-alpine AS base
 
 RUN apk add --no-cache \
     nodejs \
