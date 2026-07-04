@@ -5,6 +5,7 @@ RUN apk add --no-cache \
     nodejs \
     npm \
     postgresql-client \
+    mysql-client \
     && npm install -g npm@latest
 
 RUN apk add --no-cache \
