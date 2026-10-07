@@ -18,18 +18,21 @@ For each PHP version `X.Y` (where `X.Y` is `8.2`, `8.3`, `8.4`, or `8.5`):
 
 ## What's included
 
-Base images: `php:8.2-fpm-alpine` to `php:8.5-fpm-alpine` configured dynamically.
+Base images: `php:8.2-cli-alpine` to `php:8.5-cli-alpine` configured dynamically.
 
-System packages:
+-   System packages: `bash`, `ca-certificates`, `tini`, `postgresql-client`, `mysql-client`
+-   Application server: `roadrunner` (`rr` binary pre-installed in `/usr/local/bin/rr`)
 
--   `nodejs`, `npm` (with latest npm globally)
--   `git`, `curl`, `zip`, `unzip`
--   Development libs: `libpng-dev`, `libzip-dev`, `oniguruma-dev`, `postgresql-dev`, `sqlite-dev`, `icu-dev`, `libexif-dev`
+Prebuilt PHP extensions & modules:
 
-PHP extensions:
+-   Core & DB: `pdo`, `pdo_mysql`, `pdo_pgsql`
+-   Process & Async: `pcntl`, `posix`, `sockets`, `pecl-swoole`
+-   Math & Utils: `bcmath`, `iconv`, `fileinfo`, `phar`
+-   XML & DOM: `dom`, `tokenizer`, `xml`, `simplexml`, `xmlwriter`, `xmlreader`
+-   Media & Compression: `gd`, `zip`, `intl`, `opcache`, `exif`
+-   Cache & Connectors: `pecl-redis`, `pecl-rdkafka`, `pecl-mongodb`, `pecl-grpc`, `pecl-protobuf`
 
--   `pdo`, `pdo_mysql`, `pdo_pgsql`, `pdo_sqlite`
--   `zip`, `gd`, `intl`, `opcache`, `bcmath`, `exif`
+Builds use official Alpine precompiled APK packages to avoid heavy compilation overhead (especially under ARM/QEMU emulation). Symlinks are provided for `/usr/local/bin/php` and PHP-FPM binaries.
 
 This makes the image suitable as a base for most Laravel apps using MySQL, PostgreSQL, or SQLite.
 

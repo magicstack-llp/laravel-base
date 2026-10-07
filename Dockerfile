@@ -1,35 +1,75 @@
 ARG PHP_VERSION=8.2
-FROM php:${PHP_VERSION}-fpm-alpine AS base
+FROM php:${PHP_VERSION}-cli-alpine AS runtime
 
-RUN apk add --no-cache \
-    nodejs \
-    npm \
+LABEL maintainer="Kuldip Satpute <stputekuldip@gmail.com>"
+
+ARG PHP_VERSION=8.2
+
+# Install core runtime utilities and prebuilt PHP packages for the specified version.
+# Using prebuilt Alpine packages avoids slow compilation of heavy extensions (ARM/QEMU).
+# Dynamically checks package availability before adding to support all PHP versions (8.2..8.5) seamlessly.
+RUN set -eux; \
+    PHP_NUM="$(echo "${PHP_VERSION}" | tr -d '.')"; \
+    PKG_PREFIX="php${PHP_NUM}"; \
+    EXTRA_REPOS=""; \
+    if [ "${PHP_NUM}" = "82" ]; then \
+    EXTRA_REPOS="--repository=https://dl-cdn.alpinelinux.org/alpine/v3.20/main --repository=https://dl-cdn.alpinelinux.org/alpine/v3.20/community"; \
+    fi; \
+    WANTED_PACKAGES=" \
+    bash \
+    ca-certificates \
+    tini \
     postgresql-client \
     mysql-client \
-    && npm install -g npm@latest
+    ${PKG_PREFIX} \
+    ${PKG_PREFIX}-fpm \
+    ${PKG_PREFIX}-pdo \
+    ${PKG_PREFIX}-pdo_mysql \
+    ${PKG_PREFIX}-pdo_pgsql \
+    ${PKG_PREFIX}-pcntl \
+    ${PKG_PREFIX}-bcmath \
+    ${PKG_PREFIX}-posix \
+    ${PKG_PREFIX}-dom \
+    ${PKG_PREFIX}-tokenizer \
+    ${PKG_PREFIX}-xml \
+    ${PKG_PREFIX}-simplexml \
+    ${PKG_PREFIX}-xmlwriter \
+    ${PKG_PREFIX}-xmlreader \
+    ${PKG_PREFIX}-fileinfo \
+    ${PKG_PREFIX}-phar \
+    ${PKG_PREFIX}-iconv \
+    ${PKG_PREFIX}-gd \
+    ${PKG_PREFIX}-zip \
+    ${PKG_PREFIX}-intl \
+    ${PKG_PREFIX}-opcache \
+    ${PKG_PREFIX}-exif \
+    ${PKG_PREFIX}-sockets \
+    ${PKG_PREFIX}-pecl-redis \
+    ${PKG_PREFIX}-pecl-swoole \
+    ${PKG_PREFIX}-pecl-rdkafka \
+    ${PKG_PREFIX}-pecl-mongodb \
+    ${PKG_PREFIX}-pecl-grpc \
+    ${PKG_PREFIX}-pecl-protobuf \
+    "; \
+    apk update ${EXTRA_REPOS} > /dev/null; \
+    INSTALL_PACKAGES=""; \
+    for pkg in ${WANTED_PACKAGES}; do \
+    if [ -n "$(apk search ${EXTRA_REPOS} -e "${pkg}" 2>/dev/null)" ]; then \
+    INSTALL_PACKAGES="${INSTALL_PACKAGES} ${pkg}"; \
+    else \
+    echo "[INFO] Skipping unavailable package: ${pkg}"; \
+    fi; \
+    done; \
+    apk add --no-cache ${EXTRA_REPOS} ${INSTALL_PACKAGES}; \
+    mkdir -p /usr/local/sbin; \
+    ln -sf "/usr/bin/${PKG_PREFIX}" /usr/local/bin/php; \
+    if [ -f "/usr/sbin/php-fpm${PHP_NUM}" ]; then \
+    ln -sf "/usr/sbin/php-fpm${PHP_NUM}" /usr/local/sbin/php-fpm; \
+    ln -sf "/usr/sbin/php-fpm${PHP_NUM}" /usr/local/bin/php-fpm; \
+    fi
 
-RUN apk add --no-cache \
-    git \
-    curl \
-    libpng-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    oniguruma-dev \
-    postgresql-dev \
-    sqlite-dev \
-    icu-dev \
-    libexif-dev \
-    && docker-php-ext-install \
-    pdo \
-    pdo_mysql \
-    pdo_pgsql \
-    pdo_sqlite \
-    zip \
-    gd \
-    intl \
-    opcache \
-    bcmath \
-    exif \
-    pcntl
+# Copy RoadRunner binary
+COPY --from=ghcr.io/roadrunner-server/roadrunner:latest /usr/bin/rr /usr/local/bin/rr
 
+ENTRYPOINT ["tini", "--"]
+CMD ["php", "-v"]
