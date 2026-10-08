@@ -117,7 +117,7 @@ jobs:
       - name: Create and push manifest
         run: |
           PHP_VER="${{ matrix.php-version }}"
-          DEFAULT_PHP_VER="8.2"
+          DEFAULT_PHP_VER="8.5"
 
           GHCR_TAGS=()
 

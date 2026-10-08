@@ -1,9 +1,9 @@
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.5
 FROM php:${PHP_VERSION}-cli-alpine AS runtime
 
 LABEL maintainer="Kuldip Satpute <stputekuldip@gmail.com>"
 
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.5
 
 # Install core runtime utilities and prebuilt PHP packages for the specified version.
 # Using prebuilt Alpine packages avoids slow compilation of heavy extensions (ARM/QEMU).
