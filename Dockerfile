@@ -20,12 +20,17 @@ RUN set -eux; \
     WANTED_PACKAGES=" \
     bash \
     ca-certificates \
+    curl \
     tini \
     nodejs \
     postgresql-client \
     mysql-client \
     ${PKG_PREFIX} \
     ${PKG_PREFIX}-fpm \
+    ${PKG_PREFIX}-curl \
+    ${PKG_PREFIX}-mbstring \
+    ${PKG_PREFIX}-mysqli \
+    ${PKG_PREFIX}-pgsql \
     ${PKG_PREFIX}-pdo \
     ${PKG_PREFIX}-pdo_mysql \
     ${PKG_PREFIX}-pdo_pgsql \
@@ -47,6 +52,7 @@ RUN set -eux; \
     ${PKG_PREFIX}-opcache \
     ${PKG_PREFIX}-exif \
     ${PKG_PREFIX}-sockets \
+    ${PKG_PREFIX}-pecl-imagick \
     ${PKG_PREFIX}-pecl-redis \
     ${PKG_PREFIX}-pecl-swoole \
     ${PKG_PREFIX}-pecl-rdkafka \

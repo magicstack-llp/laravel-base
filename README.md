@@ -20,16 +20,16 @@ For each PHP version `X.Y` (where `X.Y` is `8.2`, `8.3`, `8.4`, or `8.5`):
 
 Base images: `php:8.2-cli-alpine` to `php:8.5-cli-alpine` configured dynamically.
 
--   System packages: `bash`, `ca-certificates`, `tini`, `postgresql-client`, `mysql-client`
+-   System packages: `bash`, `ca-certificates`, `curl`, `tini`, `postgresql-client`, `mysql-client`
 -   Application server: `roadrunner` (`rr` binary pre-installed in `/usr/local/bin/rr`)
 
 Prebuilt PHP extensions & modules:
 
--   Core & DB: `pdo`, `pdo_mysql`, `pdo_pgsql`
+-   Core & DB: `curl`, `mbstring`, `mysqli`, `pgsql`, `pdo`, `pdo_mysql`, `pdo_pgsql`
 -   Process & Async: `pcntl`, `posix`, `sockets`, `pecl-swoole`
 -   Math & Utils: `bcmath`, `iconv`, `fileinfo`, `phar`
 -   XML & DOM: `dom`, `tokenizer`, `xml`, `simplexml`, `xmlwriter`, `xmlreader`
--   Media & Compression: `gd`, `zip`, `intl`, `opcache`, `exif`
+-   Media & Compression: `gd`, `zip`, `intl`, `opcache`, `exif`, `pecl-imagick`
 -   Cache & Connectors: `pecl-redis`, `pecl-rdkafka`, `pecl-mongodb`, `pecl-grpc`, `pecl-protobuf`
 
 Builds use official Alpine precompiled APK packages to avoid heavy compilation overhead (especially under ARM/QEMU emulation). Symlinks are provided for `/usr/local/bin/php` and PHP-FPM binaries.
