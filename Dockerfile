@@ -12,15 +12,16 @@ RUN set -eux; \
     PHP_NUM="$(echo "${PHP_VERSION}" | tr -d '.')"; \
     PKG_PREFIX="php${PHP_NUM}"; \
     EXTRA_REPOS=""; \
+    NPM_PKG="npm"; \
     if [ "${PHP_NUM}" = "82" ]; then \
     EXTRA_REPOS="--repository=https://dl-cdn.alpinelinux.org/alpine/v3.20/main --repository=https://dl-cdn.alpinelinux.org/alpine/v3.20/community"; \
+    NPM_PKG="npm<11"; \
     fi; \
     WANTED_PACKAGES=" \
     bash \
     ca-certificates \
     tini \
     nodejs \
-    npm \
     postgresql-client \
     mysql-client \
     ${PKG_PREFIX} \
@@ -62,8 +63,7 @@ RUN set -eux; \
     echo "[INFO] Skipping unavailable package: ${pkg}"; \
     fi; \
     done; \
-    apk add --no-cache ${EXTRA_REPOS} ${INSTALL_PACKAGES}; \
-    npm install -g npm@latest; \
+    apk add --no-cache ${EXTRA_REPOS} ${INSTALL_PACKAGES} ${NPM_PKG}; \
     mkdir -p /usr/local/sbin; \
     ln -sf "/usr/bin/${PKG_PREFIX}" /usr/local/bin/php; \
     if [ -f "/usr/sbin/php-fpm${PHP_NUM}" ]; then \
