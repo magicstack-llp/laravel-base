@@ -52,6 +52,7 @@ RUN set -eux; \
     ${PKG_PREFIX}-opcache \
     ${PKG_PREFIX}-exif \
     ${PKG_PREFIX}-sockets \
+    ${PKG_PREFIX}-sodium \
     ${PKG_PREFIX}-pecl-imagick \
     ${PKG_PREFIX}-pecl-redis \
     ${PKG_PREFIX}-pecl-swoole \

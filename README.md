@@ -27,7 +27,7 @@ Prebuilt PHP extensions & modules:
 
 -   Core & DB: `curl`, `mbstring`, `mysqli`, `pgsql`, `pdo`, `pdo_mysql`, `pdo_pgsql`
 -   Process & Async: `pcntl`, `posix`, `sockets`, `pecl-swoole`
--   Math & Utils: `bcmath`, `iconv`, `fileinfo`, `phar`
+-   Math & Utils: `bcmath`, `iconv`, `fileinfo`, `phar`, `sodium`
 -   XML & DOM: `dom`, `tokenizer`, `xml`, `simplexml`, `xmlwriter`, `xmlreader`
 -   Media & Compression: `gd`, `zip`, `intl`, `opcache`, `exif`, `pecl-imagick`
 -   Cache & Connectors: `pecl-redis`, `pecl-rdkafka`, `pecl-mongodb`, `pecl-grpc`, `pecl-protobuf`
