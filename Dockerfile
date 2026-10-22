@@ -19,6 +19,8 @@ RUN set -eux; \
     bash \
     ca-certificates \
     tini \
+    nodejs \
+    npm \
     postgresql-client \
     mysql-client \
     ${PKG_PREFIX} \
@@ -61,6 +63,7 @@ RUN set -eux; \
     fi; \
     done; \
     apk add --no-cache ${EXTRA_REPOS} ${INSTALL_PACKAGES}; \
+    npm install -g npm@latest; \
     mkdir -p /usr/local/sbin; \
     ln -sf "/usr/bin/${PKG_PREFIX}" /usr/local/bin/php; \
     if [ -f "/usr/sbin/php-fpm${PHP_NUM}" ]; then \
