@@ -70,6 +70,8 @@ jobs:
           build-args: |
             PHP_VERSION=${{ matrix.php-version }}
           platforms: linux/${{ matrix.arch }}
+          provenance: mode=max
+          sbom: true
           outputs: |
             type=image,name=ghcr.io/${{ github.repository }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=php-${{ matrix.php-version }}-${{ matrix.arch }}

@@ -1,4 +1,7 @@
 ARG PHP_VERSION=8.5
+ARG ROADRUNNER_VERSION=3.0.1
+
+FROM ghcr.io/roadrunner-server/roadrunner:${ROADRUNNER_VERSION} AS roadrunner
 FROM php:${PHP_VERSION}-cli-alpine AS runtime
 
 LABEL maintainer="Kuldip Satpute <stputekuldip@gmail.com>"
@@ -62,6 +65,7 @@ RUN set -eux; \
     ${PKG_PREFIX}-pecl-protobuf \
     "; \
     apk update ${EXTRA_REPOS} > /dev/null; \
+    apk upgrade --no-cache ${EXTRA_REPOS}; \
     INSTALL_PACKAGES=""; \
     for pkg in ${WANTED_PACKAGES}; do \
     if [ -n "$(apk search ${EXTRA_REPOS} -e "${pkg}" 2>/dev/null)" ]; then \
@@ -71,6 +75,13 @@ RUN set -eux; \
     fi; \
     done; \
     apk add --no-cache ${EXTRA_REPOS} ${INSTALL_PACKAGES} ${NPM_PKG}; \
+    npm install -g npm@latest; \
+    rm -rf /usr/lib/node_modules/npm /usr/bin/npm /usr/bin/npx; \
+    ln -sf /usr/local/bin/npm /usr/bin/npm; \
+    ln -sf /usr/local/bin/npx /usr/bin/npx; \
+    if [ -f /etc/ImageMagick-7/policy.xml ]; then \
+    sed -i 's#</policymap>#  <policy domain="coder" rights="none" pattern="{EPS,PDF,PS,XPS,MVG,MSL}" />\n</policymap>#' /etc/ImageMagick-7/policy.xml; \
+    fi; \
     mkdir -p /usr/local/sbin; \
     ln -sf "/usr/bin/${PKG_PREFIX}" /usr/local/bin/php; \
     if [ -f "/usr/sbin/php-fpm${PHP_NUM}" ]; then \
@@ -79,7 +90,7 @@ RUN set -eux; \
     fi
 
 # Copy RoadRunner binary
-COPY --from=ghcr.io/roadrunner-server/roadrunner:latest /usr/bin/rr /usr/local/bin/rr
+COPY --from=roadrunner /usr/bin/rr /usr/local/bin/rr
 
 ENTRYPOINT ["tini", "--"]
 CMD ["php", "-v"]
